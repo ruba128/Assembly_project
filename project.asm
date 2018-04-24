@@ -670,8 +670,8 @@ je get_char                         ; yes,dont perform shaddowing
 sub edi,2
 pushad
 mov esi,edi
-;cmp byte[esi],0                    ;is it null?
-;je L31                             ;yes, dont perform shaddowing
+cmp byte[esi],0                    ;is it null?
+je L31                             ;yes, dont perform shaddowing
 inc esi
 cmp byte[esi],0x16                 ; is char already shaddowed?
 jne L32                            ; no , shaddow it
@@ -697,8 +697,8 @@ cmp al,0x4d                        ; fourth byte for shadowing with right arrow 
 jne  downshaddowing
 add edi,2
 mov esi,edi
-;cmp byte[esi-2],0                   ;is it nul?
-;je L33                              ; yes,dont perform shaddowing
+cmp byte[esi-2],0                   ;is it nul?
+je L33                              ; yes,dont perform shaddowing
 dec esi
 cmp byte[esi],0x16                  ; is char already shaddowed?
 jne L34                             ; no , shaddow it
@@ -735,8 +735,8 @@ inc esi
 mov ecx,0
 L35:
 ;; ### check if it's null
-;cmp byte[esi-1],0
-;je L36 ; don't change it's color
+cmp byte[esi-1],0
+je L36 ; don't change it's color
 cmp byte[esi],0x16
 jne L37
 mov byte[esi],0x07
@@ -747,7 +747,7 @@ L36:
 add esi,2
 inc ecx
 cmp ecx,80
-;jle L35
+jle L35
 jl L35
 popad 
 add edi,160
@@ -776,8 +776,8 @@ dec esi
 mov ecx,0
 L39:
 ;; ### check if it's null
-;cmp byte[esi-1],0
-;je L40 ; don't change it's color
+cmp byte[esi-1],0
+je L40 ; don't change it's color
 cmp byte[esi],0x16
 jne L41
 mov byte[esi],0x07
