@@ -45,7 +45,7 @@ cli
         mov byte[edi+ecx*2],0             ; null value
         mov byte[esi+ecx*2],0x7           ;color black
         inc ecx
-        inc edx
+       
         cmp ecx,eax
         jl char_color
         popad 
@@ -70,7 +70,7 @@ jne A_char
 cmp byte[capslock_stat],1
 jne L0
 mov byte[capslock_stat],0
-mov bx,ScanCodeTable1
+mov bx,ScanCodeTable1 
 jmp get_char
 L0:
 mov byte[capslock_stat],1
@@ -93,7 +93,6 @@ jne x_char
 cmp byte[ctrl_status],1
 je paste
 jmp print_char
-
 x_char:
 cmp al,0x2d                             ;scan code for make of X char
 jne c_char
@@ -431,6 +430,12 @@ jmp cursor
                          
 copy:
 pushad 
+xor ecx ,ecx
+labl:
+mov byte[shaddowed_string+ecx*1],0
+inc ecx
+cmp ecx , 2000
+jle labl 
 mov esi ,0xb8000                          
 xor ecx ,ecx
 L15:
@@ -474,7 +479,7 @@ inc ecx                              ; next char in copied string
 jmp L17
 
 endPaste:
-jmp cursor                            ; place cursor
+jmp L13                            ; place cursor
 
 
 ;************************************************************************************************************
@@ -566,19 +571,19 @@ L27:
 mov al,[esi]
 mov byte[storage+ecx*1],al       ; store string on the right from edi to 0xbfa (0xb8fa0-6)
 inc ecx
-inc esi
-cmp esi,0xb8f9a
-jle L27
+add esi,2
+cmp esi,0xb8f9a0
+jl L27
 mov esi,edi
 add esi,0x6
 mov ecx,0
 L28:
 mov al,[storage+ecx*1]     ; store back
 mov [esi],al
-cmp al,0 
+cmp al,0
 je out4
 inc ecx
-inc esi 
+add esi,2 
 cmp esi, 0xb8fa0 
 jle L28
 out4:
@@ -620,10 +625,10 @@ dec esi
 mov [esi],al      ; put it 
 cmp al,0
 je out3
-inc edi           ; now get the color and do the same 
+inc edi          ; now get the color and do the same 
 add ecx,0x1       ; counter from current edi 
 cmp ecx ,0xb8fa0   ;  end of the screen ?
-jle L30
+jl L30
 out3:
 popad              
 
@@ -744,7 +749,7 @@ cmp ecx,80
 jl L35
 popad 
 add edi,160
-cmp byte[esi],0x16
+cmp byte[edi-1],0x16
 je L38
 MOV BYTE[isthereshaddowing?],0
 jmp cursor
@@ -784,7 +789,7 @@ cmp ecx,80
 jl L39
 popad 
 sub edi,160
-cmp byte[edi-2],0x16
+cmp byte[edi+1],0x16
 je L42
 MOV BYTE[isthereshaddowing?],0
 jmp cursor
@@ -824,7 +829,7 @@ call remove
 pop esi
 cmp edi,esi
 jg ioi
-
+mov byte[edi+1],0x07
 ret
 
 
@@ -947,11 +952,11 @@ ScanCodeTable1: db "//1234567890-=//qwertyuiop[]//asdfghjkl;//'/zxcvbnm,.//// /"
 ScanCodeTable2: db '//!@#$%^&*()_+//QWERTYUIOP{}//ASDFGHJKL://"/ZXCVBNM<>?/// /'
 ScanCodeTable3: db "//1234567890-=//QWERTYUIOP[]//ASDFGHJKL;//'/ZXCVBNM,.//// /"
 shift_status: db 0
-shaddowed_string: times(2001) db 0
 isthereshaddowing?: db 0
 ctrl_status: db 0
-storage:  times(2000)db 0
 capslock_stat: db 0
+storage:  times(2000)db 0
+shaddowed_string: times(2001) db 0
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 times (0x400000 - 512) db 0
