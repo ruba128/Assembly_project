@@ -679,6 +679,7 @@ mov byte[esi],0x07                 ;yes,unshaddow
 cmp byte[esi-2],0x16
 jne cursor
 MOV BYTE[isthereshaddowing?],0       ; shaddow didnt  occur
+
 jmp cursor
 L32: 
 mov byte[esi],0x16
@@ -747,7 +748,6 @@ L36:
 add esi,2
 inc ecx
 cmp ecx,80
-jle L35
 jl L35
 popad 
 add edi,160
@@ -806,7 +806,6 @@ jmp cursor
 deleteShaddow:
 mov byte[isthereshaddowing?],0
 mov edi,0xb8fa0
-
 p14:
 sub edi,2
 cmp byte[edi+1],0x16
@@ -824,7 +823,7 @@ mov edi,ebp
 
 ioi:
 pushad
-call re_color
+;call re_color
 popad
 push esi
 call remove
@@ -845,7 +844,7 @@ mov esi,edi
 dec esi
 dec esi
 mov byte [esi] , 0x0 ; delete previous char
-mov byte[esi+1],0x16
+mov byte[esi+1],0x7
 popad
 back1:
 pushad
