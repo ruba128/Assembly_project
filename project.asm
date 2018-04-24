@@ -455,7 +455,11 @@ ret
 
 paste:
 xor ecx,ecx
+
 L17:                    ; make space for insertion of one char 
+mov al,[shaddowed_string+ecx*1]      ; get char from copied string in memroy one at a time  
+cmp al,0                             ; end of copied string?
+je endPaste      
 push ecx
 mov esi,edi
 mov cl,[esi]
@@ -469,9 +473,7 @@ je L19                  ; yes, all string is shifted
 jmp L18                 ; no , continue shifting 
 L19:
 pop ecx
-mov al,[shaddowed_string+ecx*1]      ; get char from copied string in memroy one at a time  
-cmp al,0                             ; end of copied string?
-je endPaste                          ; yes, paste is done 
+                    ; yes, paste is done 
 mov [edi],al                         ; insert the char at edi                     
 inc edi                              
 inc edi                              ; point to next char in screen
@@ -479,7 +481,7 @@ inc ecx                              ; next char in copied string
 jmp L17
 
 endPaste:
-jmp L13                            ; place cursor
+jmp cursor                           ; place cursor
 
 
 ;************************************************************************************************************
